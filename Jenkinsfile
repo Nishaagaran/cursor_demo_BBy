@@ -23,7 +23,7 @@ pipeline {
                 echo 'Checking out source code from repository...'
                 checkout scm
                 script {
-                    def gitCommit = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                    def gitCommit = bat(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
                     env.GIT_COMMIT_SHORT = gitCommit
                     echo "Git commit: ${gitCommit}"
                 }
@@ -33,14 +33,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the project with Maven...'
-                sh 'mvn clean compile -DskipTests'
+                bat 'mvn clean compile -DskipTests'
             }
         }
         
         stage('Test') {
             steps {
                 echo 'Running unit tests...'
-                sh 'mvn test'
+                bat 'mvn test'
             }
             post {
                 always {
@@ -53,7 +53,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging the application...'
-                sh 'mvn package -DskipTests'
+                bat 'mvn package -DskipTests'
             }
             post {
                 success {
@@ -68,8 +68,11 @@ pipeline {
         success {
             echo 'Pipeline completed successfully!'
             script {
-                def artifact = sh(returnStdout: true, script: 'ls -t target/*.jar | head -1').trim()
-                echo "Artifact created: ${artifact}"
+                def artifactList = bat(returnStdout: true, script: 'dir /b target\\*.jar').trim()
+                if (artifactList) {
+                    def artifacts = artifactList.split('\r?\n')
+                    echo "Artifact(s) created: ${artifacts.join(', ')}"
+                }
             }
         }
         failure {
