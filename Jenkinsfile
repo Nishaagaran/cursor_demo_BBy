@@ -23,7 +23,10 @@ pipeline {
                 echo 'Checking out source code from repository...'
                 checkout scm
                 script {
-                    def gitCommit = bat(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                    def gitCommitOutput = bat(returnStdout: true, script: '@echo off && git rev-parse --short HEAD').trim()
+                    // Extract just the commit hash from the output (removes command prompt text)
+                    def lines = gitCommitOutput.split('\r?\n')
+                    def gitCommit = lines.find { line -> line.matches(/^[a-f0-9]{7,}$/) } ?: lines.last().replaceAll(/.*>/, '').trim()
                     env.GIT_COMMIT_SHORT = gitCommit
                     echo "Git commit: ${gitCommit}"
                 }
@@ -45,7 +48,7 @@ pipeline {
             post {
                 always {
                     echo 'Publishing test results...'
-                    junit 'target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
                 }
             }
         }
