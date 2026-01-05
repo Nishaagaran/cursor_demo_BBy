@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     tools {
-        maven 'Maven'
-        jdk 'JDK17'
+        maven 'Maven3'
+        jdk 'java17'
     }
     
     options {
@@ -14,7 +14,7 @@ pipeline {
     
     environment {
         MAVEN_OPTS = '-Xmx1024m'
-        JAVA_HOME = "${tool 'JDK17'}"
+        JAVA_HOME = "${tool 'java17'}"
     }
     
     stages {

@@ -22,21 +22,25 @@ Go to **Manage Jenkins** → **Manage Plugins** → **Available** and install:
 
 1. Go to **Manage Jenkins** → **Global Tool Configuration**
 2. Under **JDK**, click **Add JDK**
-3. Name it: `JDK17`
+3. **Important**: Name it exactly: `java17` (lowercase, no spaces)
 4. Set **JAVA_HOME** to your JDK 17 installation path:
    - Windows: `C:\Program Files\Java\jdk-17`
    - Linux/Mac: `/usr/lib/jvm/java-17-openjdk` or similar
 5. Click **Save**
 
+**Note**: If you prefer a different name, you must update the Jenkinsfile to match your configuration.
+
 ### 3. Configure Maven
 
 1. In **Global Tool Configuration**, scroll to **Maven**
 2. Click **Add Maven**
-3. Name it: `Maven`
+3. **Important**: Name it exactly: `Maven3` (case-sensitive)
 4. Choose one of:
    - **Install automatically** (recommended) - Jenkins will download Maven
    - **MAVEN_HOME** - Point to your existing Maven installation
 5. Click **Save**
+
+**Note**: If you prefer a different name, you must update the Jenkinsfile to match your configuration.
 
 ## Pipeline Stages
 
@@ -86,14 +90,17 @@ The Jenkinsfile includes the following stages:
 
 ### JDK 17 Not Found
 
-If you see "JDK17 tool not found":
+If you see "java17 tool not found":
 - Verify JDK 17 is configured in **Global Tool Configuration**
-- Ensure the name matches exactly: `JDK17`
+- Ensure the name matches exactly: `java17` (lowercase)
+- The Jenkinsfile uses `java17` - if your Jenkins uses a different name, update the Jenkinsfile accordingly
 
 ### Maven Not Found
 
 If Maven commands fail:
 - Verify Maven is configured in **Global Tool Configuration**
+- Ensure the name matches exactly: `Maven3` (case-sensitive)
+- The Jenkinsfile uses `Maven3` - if your Jenkins uses a different name, update the Jenkinsfile accordingly
 - Check that Maven is in the system PATH
 - Try using the full path: `/path/to/mvn` instead of `mvn`
 
