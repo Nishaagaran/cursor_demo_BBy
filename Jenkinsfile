@@ -3,7 +3,7 @@ pipeline {
     
     tools {
         maven 'maven_home'
-        jdk 'jave_home'
+        
     }
     
     options {
