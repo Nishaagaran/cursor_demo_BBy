@@ -15,6 +15,7 @@ pipeline {
     environment {
         MAVEN_OPTS = '-Xmx1024m'
         JAVA_HOME = "${tool 'java17'}"
+        git -"git.exe"
     }
     
     stages {
