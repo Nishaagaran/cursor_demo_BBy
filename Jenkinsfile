@@ -32,6 +32,21 @@ pipeline {
                 }
             }
         }
+        stages {
+        stage('Checkout1') {
+            steps {
+                echo 'Checking out source code from repository...'
+                checkout scm
+                script {
+                    def gitCommitOutput = bat(returnStdout: true, script: '@echo off && git rev-parse --short HEAD').trim()
+                    // Extract just the commit hash from the output (removes command prompt text)
+                    def lines = gitCommitOutput.split('\r?\n')
+                    def gitCommit = lines.find { line -> line.matches(/^[a-f0-9]{7,}$/) } ?: lines.last().replaceAll(/.*>/, '').trim()
+                    env.GIT_COMMIT_SHORT = gitCommit
+                    echo "Git commit: ${gitCommit}"
+                }
+            }
+        }
         
         stage('Build') {
             steps {
